@@ -1,36 +1,37 @@
-import { View, Text, Image, Modal, StyleSheet } from 'react-native'
-import React, { useState } from 'react'
-import { Button} from 'react-native-elements';
+import {View, Text, Image, Modal, StyleSheet} from 'react-native';
+import React, {useState} from 'react';
+import {Button} from 'react-native-elements';
 import axios from 'axios';
 import MyModal from '../../components/Modal';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { fakeAPIBaseURL } from '../../helpers/apiAccessToken';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {fakeAPIBaseURL} from '../../helpers/apiAccessToken';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import colors from '../../res/colors';
-import { logo } from '../../assets/images'
+import {logo} from '../../assets/images';
 import FontAwesomeIcon5 from 'react-native-vector-icons/FontAwesome5';
-import { Fumi } from 'react-native-textinput-effects';
-import Lato from '../../components/Lato/Index'
+import {Fumi} from 'react-native-textinput-effects';
+import Lato from '../../components/Lato/Index';
 
 export default function Index(props) {
-
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [buttons, setButtons] = useState(true)
+  const [buttons, setButtons] = useState(true);
 
   const disable = (password, email) => {
-    console.log("password = ", password)
-    console.log("email = ", email)
+    console.log('password = ', password);
+    console.log('email = ', email);
     if (password.length <= 1 || email.length <= 1) {
-      return true
+      return true;
+    } else {
+      return false;
     }
-    else {
-      return false
-    }
-  }
+  };
 
-  const [modalVisible, setModalVisible] = useState(false)
-  const [modalVisible2, setModalVisible2] = useState(false)
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible2, setModalVisible2] = useState(false);
 
   const loginUser = async () => {
     // username: "mor_2314",
@@ -41,28 +42,49 @@ export default function Index(props) {
         username: username,
         password: password,
       };
-      setModalVisible2(true)
-      console.log('Proses Login...')
-      const res = await axios.post(`${fakeAPIBaseURL}/auth/login`, body)
-      console.log(res.data.token)
-      setModalVisible(true)
+      setModalVisible2(true);
+      console.log('Proses Login...');
+      const res = await axios.post(`${fakeAPIBaseURL}/auth/login`, body);
+      console.log(res.data.token);
+      setModalVisible(true);
     } catch (error) {
-      alert("Username Atau Password Salah")
-      console.log("token : ", error)
-    } finally{
-      setModalVisible2(false)
+      alert('Username Atau Password Salah');
+      console.log('token : ', error);
+    } finally {
+      setModalVisible2(false);
     }
-  }
+  };
 
   return (
     <View style={styles.mainContainer}>
-      <MyModal label="Login" modalVisible={modalVisible} setModalVisible={setModalVisible} navigation={props.navigation} target='Movie' />
+      <MyModal
+        label="Login"
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        navigation={props.navigation}
+        target="Movie"
+      />
       <Modal visible={modalVisible2} transparent={true}>
-        <View  style={{width: wp('100%'), height: hp('100%'), backgroundColor: 'rgba(0,0,0,0.5)', alignItems: 'center', justifyContent:'center'}}>
-        <View style={{height: hp('30%'),width: wp('60%'), justifyContent: 'center', alignItems: 'center'}}>
-      <Lato type='Black'size={16}>Proses Login</Lato>
-      </View>
-      </View>
+        <View
+          style={{
+            width: wp('100%'),
+            height: hp('100%'),
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <View
+            style={{
+              height: hp('30%'),
+              width: wp('60%'),
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Lato type="Black" size={16}>
+              Proses Login
+            </Lato>
+          </View>
+        </View>
       </Modal>
       <View style={styles.topContainer}>
         <View style={styles.logoContainer}>
@@ -78,11 +100,17 @@ export default function Index(props) {
           iconSize={20}
           iconWidth={40}
           inputPadding={16}
-          style={{ borderTopLeftRadius: 12, borderBottomRightRadius: 12, marginBottom: 12, borderBottomColor: colors.primaryBlack, borderBottomWidth: 0.3 }}
-          inputStyle={{ color: colors.primaryBlack }}
-          onChangeText={(text) => {
-            setUsername(text)
-            setButtons(disable(password, username))
+          style={{
+            borderTopLeftRadius: 12,
+            borderBottomRightRadius: 12,
+            marginBottom: 12,
+            borderBottomColor: colors.primaryBlack,
+            borderBottomWidth: 0.3,
+          }}
+          inputStyle={{color: colors.primaryBlack}}
+          onChangeText={text => {
+            setUsername(text);
+            setButtons(disable(password, username));
           }}
           onFocus={() => setButtons(disable(password, username))}
           onEndEditing={() => setButtons(disable(password, username))}
@@ -96,12 +124,18 @@ export default function Index(props) {
           iconSize={20}
           iconWidth={40}
           inputPadding={16}
-          style={{ borderTopLeftRadius: 12, borderBottomRightRadius: 12, marginBottom: 12, borderBottomColor: colors.primaryBlack, borderBottomWidth: 0.3 }}
-          inputStyle={{ color: colors.primaryBlack }}
+          style={{
+            borderTopLeftRadius: 12,
+            borderBottomRightRadius: 12,
+            marginBottom: 12,
+            borderBottomColor: colors.primaryBlack,
+            borderBottomWidth: 0.3,
+          }}
+          inputStyle={{color: colors.primaryBlack}}
           secureTextEntry={true}
-          onChangeText={(text) => {
-            setPassword(text)
-            setButtons(disable(password, username))
+          onChangeText={text => {
+            setPassword(text);
+            setButtons(disable(password, username));
           }}
           onFocus={() => setButtons(disable(password, username))}
           onEndEditing={() => setButtons(disable(password, username))}
@@ -119,23 +153,22 @@ export default function Index(props) {
             disabled={buttons}
           />
         </View>
-
       </View>
-      <View style={{ alignItems: 'center', marginTop: hp('10%') }}>
+      <View style={{alignItems: 'center', marginTop: hp('10%')}}>
         <Lato>Didn't Have Any Account?</Lato>
         <TouchableOpacity onPress={() => props.navigation.navigate('Register')}>
-          <Lato type='Black'>Create new one!</Lato>
+          <Lato type="Black">Create new one!</Lato>
         </TouchableOpacity>
       </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: colors.primaryBlack
+    backgroundColor: colors.primaryBlack,
   },
   topContainer: {
     height: hp('50%'),
@@ -158,7 +191,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 12,
-    marginTop: hp('10%')
+    marginTop: hp('10%'),
   },
   logoSize: {
     width: wp('70%'),
@@ -166,6 +199,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     alignItems: 'center',
-    marginTop: hp('3%')
-  }
-})
+    marginTop: hp('3%'),
+  },
+});
