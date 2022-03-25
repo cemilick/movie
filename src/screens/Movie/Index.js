@@ -1,107 +1,123 @@
-import { View, Text, TouchableOpacity, FlatList, Image, Dimensions } from 'react-native'
+import { View, Text, FlatList, Image, Pressable, SafeAreaView, Modal } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { ACCESS_TOKEN, baseUrl, imageUrl } from '../../helpers/apiAccessToken'
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
+import ClipLoader from "react-spinners/ClipLoader";
+import colors from '../../res/colors'
+import Lato from '../../components/Lato/Index'
 
 export default function Index(props) {
   const [listMovies, setListMovies] = useState([]);
-  const [weight1, setWeight1] = useState("bold");
-  const [weight2, setWeight2] = useState("normal");
-  const [weight3, setWeight3] = useState("normal");
-
-  const isActive = (label) => {
-    if(label === "now_playing"){
-      setWeight1('bold')
-      setWeight2('normal')
-      setWeight3('normal')
-    } else if(label === "popular"){
-      setWeight1('normal')
-      setWeight2('bold')
-      setWeight3('normal')
-    } else if(label === "top_rated"){
-      setWeight1('normal')
-      setWeight2('normal')
-      setWeight3('bold')
-    }
-  }
-
-  const getListMovies = async (endpoint) => {
+  const [listMovies2, setListMovies2] = useState([]);
+  const [visible, setVisible] = useState(true)
+  
+  const getListMovies = async () => {
     try{
-      const results = await axios.get(`${baseUrl}/movie/${endpoint}`, {headers: {
+      console.log('start')
+      const results = await axios.get(`${baseUrl}/movies`, {headers: {
         Authorization: `Bearer ${ACCESS_TOKEN}`
       }})
+      console.log('end')
       
       setListMovies(results.data.results)
+      setListMovies2(results.data.results)
     }catch(err){
       console.log(err);
+    }finally{
+      setVisible(false)
     }
   }
   
   const CardMovie = ({item}) => {
     return (
+      <Pressable onPress={() => {
+        props.navigation.navigate('Details', {id: item.id})
+        }}>
         <View style={{
-          width: Dimensions.get('window').width/3,
+          width: wp('30%'),
           alignItems: 'center',
           marginTop: 10 }}>
-          <Image source={{uri: `${imageUrl}${item.poster_path}`}} style={{
-            width: 100,
-            height: 100 }} />
-          <Text style={{textAlign: 'center'}}>{item.title}</Text>
+          <Image resizeMode='contain' source={{uri: `${imageUrl}${item.poster_path}`}} style={{
+            width: 200,
+            height: 150 }} />
         </View>
+        </Pressable>
     )
   }
 
-  useEffect(() => {
-    getListMovies('now_playing');
+  const CardMovie2 = ({item}) => {
+    return (
+      <Pressable onPress={() => {
+        props.navigation.navigate('Details', {id: item.id})
+        }} style={{
+          flexDirection: 'row',
+           justifyContent: 'flex-start',
+            alignItems: 'flex-start',
+            backgroundColor: colors.primaryBlue,
+            borderRadius: 10,
+            padding: 10,
+            marginBottom: 10}}>
+        <View style={{
+          width: wp('30%'),
+          alignItems: 'center',
+          }}>
+          <Image resizeMode='cover' source={{uri: `${imageUrl}${item.poster_path}`}} style={{
+            width: 115,
+            height: 150, marginRight: 10, borderRadius: 8 }} />
+        </View>
+        <View style={{width: wp('60%')}}>
+          <Lato style={{color: 'white', fontWeight: 'bold', fontSize: 18, marginBottom: 5}}>{item.title}</Lato>
+          <View style={{color: 'white',  borderBottomColor: 'white', borderBottomWidth: 1, marginBottom: 5}}/>
+          <Lato numberOfLines={4} style={{color: "white"}}>{item.overview}</Lato>
+          <Lato style={{color: 'white', marginTop: 5, marginBottom: 10}}>Release Date : {item.release_date}</Lato>
+          <Lato style={{color: "white"}}>
+            <Lato>Popularity : </Lato> 
+            <Lato style={{fontWeight: 'bold'}}>{item.popularity}</Lato>
+          </Lato>
+        </View>
+        </Pressable>
+    )
+  }
+
+  useEffect(() => { 
+    getListMovies();
   }, [])
 
   return (
-    <View style={{
-      flexDirection: 'column',
-      alignItems: 'center',
-      paddingTop: 10
-        }}>
-      <Text style={{
-        fontSize: 20, 
-        fontWeight: 'bold'
-        }}>List Movies</Text>
-      <View style={{
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        backgroundColor: '#b80617', 
-        width: Dimensions.get('window').width,
-        padding: 10
-          }}>
-        <TouchableOpacity onPress={() => {
-          getListMovies('now_playing')
-          isActive('now_playing')
-          }} >
-          <Text style={{color: 'white', fontWeight: weight1}}>Now Playing</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => {
-          getListMovies('popular')
-          isActive('popular')
-          }}>
-          <Text style={{color: 'white', fontWeight: weight2}}>Most Popular</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => {getListMovies('top_rated')
-      isActive('top_rated')}}>
-          <Text style={{color: 'white', fontWeight: weight3}}>Top Rated</Text>
-        </TouchableOpacity>
+    <SafeAreaView style={{width: wp('100%'), flex: 1, padding: 10, backgroundColor: 'black'}}>
+      <Modal visible={visible} transparent={true}>
+        <View  style={{width: wp('100%'), height: hp('100%'), backgroundColor: 'black', alignItems: 'center', justifyContent:'center'}}>
+          <View style={{height: hp('30%'),width: wp('60%'), justifyContent: 'center', alignItems: 'center'}}>
+            <Text style={{color: 'white',  fontSize: 16}}>Sedang Mengambil Semua Movie</Text>
+          </View>
+        </View>
+      </Modal>
+      <View style={{backgroundColor: colors.primaryBlue, width: wp('100%'), margin: -10, padding: 10}}>
+        <Lato type='Light' size={24} style={{textAlign: 'center', marginTop: 10}}>Movieku</Lato>
       </View>
-      <View style={{
-        width: Dimensions.get('window').width,
-        flexDirection: 'row',
-        alignContent: 'center',
-      }}>
-        <FlatList 
-        data={listMovies} 
-        keyExtractor={(item, index) => index} 
-        renderItem={CardMovie} 
-        numColumns={3} style={{
-        width: Dimensions.get('window').width,
+        <View style={{flex: 1, marginTop: 20}}>
+          <Lato  style={{color: "white", fontSize: 19}}>Recommended Movies</Lato>
+          <FlatList 
+          data={listMovies} 
+          keyExtractor={(item, index) => index} 
+          renderItem={CardMovie} 
+          showsHorizontalScrollIndicator={false}
+          horizontal={true} contentContainerStyle={{
+            alignSelf: 'flex-start'
         }}/>
+        </View>
+      <View style={{marginTop: -hp('40%'), flex: 1}}>
+        <Lato style={{color: "white", fontSize: 19, height: 40}}>Latest Upload Movies</Lato>
+        <FlatList 
+        data={listMovies2} 
+        keyExtractor={(item, index) => index} 
+        renderItem={CardMovie2} 
+        showsHorizontalScrollIndicator={false}
+         contentContainerStyle={{
+          alignSelf: 'flex-start'
+      }}/>
       </View>
-    </View>
+    </SafeAreaView>
   )
 }
