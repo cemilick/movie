@@ -1,14 +1,11 @@
-import { View, Text, Image, Dimensions, ScrollView, StyleSheet } from 'react-native'
-import React, { useState } from 'react'
-
 const cekEmail = (email) => {
     let polaRegexAwal = /^([A-Za-z][A-Za-z0-9\-\.\_]*)/
     let polaRegexTengah = /\@([A-Za-z][A-Za-z0-9\-\_]*)/
     let polaRegexAkhhir = /(\.[A-Za-z][A-Za-z0-9\-\_]*)+$/
     if (email && typeof email === "string") {
         if (polaRegexAwal.test(email)) {
-            if (polaRegexTengah.test(email.substring(email.indexOf("@"), email.length - 1))) {
-                if (polaRegexAkhhir.test(email.substring(email.indexOf(".", email.indexOf("@")), email.length + 1))) {
+            if (polaRegexTengah.test(email.substring(email.indexOf("@"), email.length))) {
+                if (polaRegexAkhhir.test(email.substring(email.indexOf(".", email.indexOf("@")), email.length))) {
                     return "VALID"
                 }
                 else {

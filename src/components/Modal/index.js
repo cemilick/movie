@@ -1,5 +1,6 @@
 import { View, Modal, Image, Dimensions, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
+import colors from '../../res/colors';
 
 export default function MyModal(props) {
   return (
@@ -11,7 +12,7 @@ export default function MyModal(props) {
         <View style={styles.modalContent}>
           <Image source={require('../../assets/images/success.png')} style={styles.modalImage} resizeMode='contain' />
           <Text style={{ color: 'white', marginBottom: 10, fontSize: 16 }}>Berhasil {props.label}</Text>
-          <TouchableOpacity style={{ backgroundColor: '#b80617', padding: 10, borderRadius: 5 }} color='#0D28A6' onPress={() => {
+          <TouchableOpacity style={{ backgroundColor: colors.primaryBlue, padding: 10, borderRadius: 5 }} color={colors.primaryBlue} onPress={() => {
             props.setModalVisible(!props.modalVisible)
             props.navigation.navigate(props.target)
           }}>

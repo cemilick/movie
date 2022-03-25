@@ -1,6 +1,6 @@
-import { View, Text, Image, Dimensions, ScrollView, StyleSheet } from 'react-native'
+import { View, Text, Image, Modal, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
-import { Button, Input } from 'react-native-elements';
+import { Button} from 'react-native-elements';
 import axios from 'axios';
 import MyModal from '../../components/Modal';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -10,7 +10,7 @@ import colors from '../../res/colors';
 import { logo } from '../../assets/images'
 import FontAwesomeIcon5 from 'react-native-vector-icons/FontAwesome5';
 import { Fumi } from 'react-native-textinput-effects';
-
+import Lato from '../../components/Lato/Index'
 
 export default function Index(props) {
 
@@ -30,28 +30,40 @@ export default function Index(props) {
   }
 
   const [modalVisible, setModalVisible] = useState(false)
+  const [modalVisible2, setModalVisible2] = useState(false)
 
-  const createUser = async () => {
+  const loginUser = async () => {
     // username: "mor_2314",
     // password: "83r5^_"
 
     try {
-      const body = await {
+      const body = {
         username: username,
         password: password,
       };
+      setModalVisible2(true)
+      console.log('Proses Login...')
       const res = await axios.post(`${fakeAPIBaseURL}/auth/login`, body)
       console.log(res.data.token)
       setModalVisible(true)
     } catch (error) {
       alert("Username Atau Password Salah")
       console.log("token : ", error)
+    } finally{
+      setModalVisible2(false)
     }
   }
 
   return (
     <View style={styles.mainContainer}>
       <MyModal label="Login" modalVisible={modalVisible} setModalVisible={setModalVisible} navigation={props.navigation} target='Movie' />
+      <Modal visible={modalVisible2} transparent={true}>
+        <View  style={{width: wp('100%'), height: hp('100%'), backgroundColor: 'rgba(0,0,0,0.5)', alignItems: 'center', justifyContent:'center'}}>
+        <View style={{height: hp('30%'),width: wp('60%'), justifyContent: 'center', alignItems: 'center'}}>
+      <Lato type='Black'size={16}>Proses Login</Lato>
+      </View>
+      </View>
+      </Modal>
       <View style={styles.topContainer}>
         <View style={styles.logoContainer}>
           <Image source={logo} resizeMode="contain" style={styles.logoSize} />
@@ -62,7 +74,7 @@ export default function Index(props) {
           label={'User Name'}
           iconClass={FontAwesomeIcon5}
           iconName={'user-alt'}
-          iconColor={'#f7971e'}
+          iconColor={colors.primaryBlue}
           iconSize={20}
           iconWidth={40}
           inputPadding={16}
@@ -80,7 +92,7 @@ export default function Index(props) {
           label={'Password'}
           iconClass={FontAwesomeIcon5}
           iconName={'lock'}
-          iconColor={'#f7971e'}
+          iconColor={colors.primaryBlue}
           iconSize={20}
           iconWidth={40}
           inputPadding={16}
@@ -100,19 +112,19 @@ export default function Index(props) {
             title="LOGIN"
             buttonStyle={{
               width: 200,
-              backgroundColor: '#f7971e',
+              backgroundColor: colors.primaryBlack,
               borderRadius: 5,
             }}
-            onPress={createUser}
+            onPress={loginUser}
             disabled={buttons}
           />
         </View>
 
       </View>
       <View style={{ alignItems: 'center', marginTop: hp('10%') }}>
-        <Text style={{ color: 'white' }}>Didn't Have Any Account?</Text>
+        <Lato>Didn't Have Any Account?</Lato>
         <TouchableOpacity onPress={() => props.navigation.navigate('Register')}>
-          <Text style={{ fontWeight: 'bold', color: 'white' }}>Create new one!</Text>
+          <Lato type='Black'>Create new one!</Lato>
         </TouchableOpacity>
       </View>
     </View>
@@ -128,12 +140,12 @@ const styles = StyleSheet.create({
   topContainer: {
     height: hp('50%'),
     width: wp('100%'),
-    backgroundColor: colors.primaryRed,
+    backgroundColor: colors.primaryWhite,
     alignItems: 'center',
   },
   bottomContainer: {
     width: wp('90%'),
-    backgroundColor: colors.primaryWhite,
+    backgroundColor: colors.primaryBlue,
     marginTop: hp('-15%'),
     borderRadius: 12,
     paddingVertical: hp('5%'),

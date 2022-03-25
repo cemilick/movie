@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import Movie from '../../screens/Movie/Index'
 import Register from '../../screens/Register/Index'
 import Login from '../../screens/Login/Index'
+import Details from '../../screens/Details/Index'
 
 const Stack = createStackNavigator()
 
@@ -13,6 +14,7 @@ export default function Index(props) {
       <Stack.Screen name="Movie" component={Movie} />
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name='Details' component={Details} />
     </Stack.Navigator>
   )
 }
